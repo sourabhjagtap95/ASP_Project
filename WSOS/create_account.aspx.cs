@@ -21,20 +21,31 @@ public partial class create_account : System.Web.UI.Page
         try
         {
             conn.Open();                                        //made Connection open
-            SqlCommand cmd = new SqlCommand("select PRN from PRN_Table where PRN='" + prn_no + "'", conn);  //check PRN number at Database
-            SqlDataReader rd = cmd.ExecuteReader();             //execute command 
-            /*  If PRN Number is Right  Make Panel Visible  */
-            if (rd.Read())
+            //Response.Write("SELECT * FROM user_info WHERE PRN='" + prn_no + "'");
+            /*Check For PRN if its existing in Database*/
+            SqlCommand c = new SqlCommand("SELECT * FROM user_info WHERE PRN='" + prn_no + "'", conn);
+            SqlDataReader r = c.ExecuteReader();
+            if (r.Read())
             {
-                area_hidden.Visible = true;                     //Panel is Visible           
-                submit.Enabled = true;
-
+                Response.Write("<script>alert('PRN number already existing ! Please Go To Login Page')</script>");
             }
-
-            /*PRN Number is Wrong*/
             else
             {
-                Response.Write("<script>alert('Check Your PRN again !');</script>");
+                SqlCommand cmd = new SqlCommand("select PRN from PRN_Table where PRN='" + prn_no + "'", conn);  //check PRN number at Database
+                SqlDataReader rd = cmd.ExecuteReader();             //execute command 
+                /*  If PRN Number is Right  Make Panel Visible  */
+                if (rd.Read())
+                {
+                    area_hidden.Visible = true;                     //Panel is Visible           
+                    submit.Enabled = true;
+
+                }
+
+                /*PRN Number is Wrong*/
+                else
+                {
+                    Response.Write("<script>alert('Check Your PRN again !');</script>");
+                }
             }
             conn.Close();
         }
@@ -61,20 +72,36 @@ public partial class create_account : System.Web.UI.Page
             string email = String.Format("{0}", Request.Form["email"]);
             string mobile = String.Format("{0}", Request.Form["mobile"]);
             string address = String.Format("{0}", Request.Form["address"]);
-            Response.Write("INSERT INTO user_info(First_Name,Last_Name,User_Name,DOB,Year,Division,Roll_No,Email_ID,Mobile,Address) values('" + firstname + "','" + lastname + "','" + username + "','" + date + month + year + "','" + classyear + "','" + division + "','" + rollno + "','" + email + "'," + mobile + ",'" + address + "')");
-            //SqlCommand cmd = new SqlCommand("INSERT INTO user_info(First_Name,Last_Name,User_Name,DOB,Year,Division,Roll_No,Email_ID,Mobile,Address) values('" + firstname + "','" + lastname + "','" + username + "','" + date + month + year + "','" + classyear + "','" + division + "','" + rollno + "','" + email + "'," + mobile + ",'" + address + "')", conn);
-            //SqlDataAdapter cmd = new SqlDataAdapter("INSERT INTO user_table values('" + firstname + "','" + lastname + "','" + username + "','" + date + month + year + "','" + classyear + "','" + division + "','" + rollno + "','" + email + "'," + mobile + ",'" + address + "')",conn)
+            //Response.Write("INSERT INTO user_info(First_Name,Last_Name,User_Name,DOB,Year,Division,Roll_No,Email_ID,Mobile,Address) values('" + firstname + "','" + lastname + "','" + username + "','" + date + month + year + "','" + classyear + "','" + division + "','" + rollno + "','" + email + "'," + mobile + ",'" + address + "')");
+            //Response.Write("INSERT INTO login_users1(userID,Username,Password,Email_ID) values((SELECT userID from user_info WHERE USER_NAME='" + username + "' ),'" + username + "',CONVERT(VARCHAR(32), HashBytes('MD5', '" + password + "'), 2),'" + email + "')");
 
-            /*Data Inserted*/
-            //if (cmd.ExecuteNonQuery() != 0)
-            //{
-            //    Response.Write("<script>alert('Yeah !! Data Inserted !!')</script>");
-            //}
-            //else
-            //{
-            //    Response.Write("<script>alert('Nuhhh !! Data Not Inserted !!')</script>");
-            //}
+            /*Check For User Name Existing in Database*/
+            SqlCommand cmd0 = new SqlCommand("SELECT * FROM user_info WHERE User_Name='" + username + "'", conn);
+            SqlDataReader rd = cmd0.ExecuteReader();
+            if (rd.Read())
+            {
+                Response.Write("<script>alert('User Name Already Taken ! Please Take another')</script>");
+            }
+            else
+            {
+                SqlCommand cmd = new SqlCommand("INSERT INTO user_info(First_Name,Last_Name,User_Name,DOB,Year,Division,Roll_No,Email_ID,Mobile,Address) values('" + firstname + "','" + lastname + "','" + username + "','" + date + month + year + "','" + classyear + "','" + division + "','" + rollno + "','" + email + "'," + mobile + ",'" + address + "')", conn);
+                //SqlDataAdapter cmd = new SqlDataAdapter("INSERT INTO user_table values('" + firstname + "','" + lastname + "','" + username + "','" + date + month + year + "','" + classyear + "','" + division + "','" + rollno + "','" + email + "'," + mobile + ",'" + address + "')",conn)
+
+                /*Data Inserted*/
+                if (cmd.ExecuteNonQuery() != 0)
+                {
+                    SqlCommand cmd1 = new SqlCommand("INSERT INTO login_users1(userID,Username,Password,Email_ID) values((SELECT userID from user_info WHERE USER_NAME='" + username + "' ),'" + username + "',CONVERT(VARCHAR(32), HashBytes('MD5', '" + password + "'), 2),'" + email + "')", conn);
+                    if (cmd1.ExecuteNonQuery() != 0)
+                        Response.Write("<script>alert('Yeah !! Data Inserted !!')</script>");
+                    else
+                        Response.Write("<script>alert('Data Inserted only in user_info!!')</script>");
+                }
+                else
+                {
+                    Response.Write("<script>alert('Nuhhh !! Data Not Inserted !!')</script>");
+                }
+            }
         }
-        catch (Exception ee) { Response.Write(ee.StackTrace ); }
+        catch (Exception ee) { Response.Write(ee.StackTrace); }
     }
 }
