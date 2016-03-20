@@ -5,10 +5,11 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data.SqlClient;
+using GetConnection;            //Connection Establishment
 
 public partial class create_account : System.Web.UI.Page
 {
-    SqlConnection conn = new SqlConnection("server=SOURABH\\MYSQLSERVER;initial catalog=aspweb;integrated security=true");
+    SqlConnection conn = GetConnection.Class1.getConnected();
     protected void Page_Load(object sender, EventArgs e)
     {
         area_hidden.Visible = false;
@@ -21,32 +22,36 @@ public partial class create_account : System.Web.UI.Page
         try
         {
             conn.Open();                                        //made Connection open
-            //Response.Write("SELECT * FROM user_info WHERE PRN='" + prn_no + "'");
-            /*Check For PRN if its existing in Database*/
-            SqlCommand c = new SqlCommand("SELECT * FROM user_info WHERE PRN='" + prn_no + "'", conn);
-            SqlDataReader r = c.ExecuteReader();
-            if (r.Read())
+     
+            /*Pre Condition*/
+            //check PRN number at Database      
+            SqlCommand cmd = new SqlCommand("select count(*) from PRN_Table where PRN='" + prn_no + "'", conn);
+            int count0 = (int)cmd.ExecuteScalar(); 
+            /*  If PRN Number is Right  Make Panel Visible  */
+            if (count0!=0)
             {
-                Response.Write("<script>alert('PRN number already existing ! Please Go To Login Page')</script>");
-            }
-            else
-            {
-                SqlCommand cmd = new SqlCommand("select PRN from PRN_Table where PRN='" + prn_no + "'", conn);  //check PRN number at Database
-                SqlDataReader rd = cmd.ExecuteReader();             //execute command 
-                /*  If PRN Number is Right  Make Panel Visible  */
-                if (rd.Read())
+                /*Post Condition*/
+                /*Check For PRN if its existing in Database*/
+                //Response.Write("SELECT * FROM user_info WHERE PRN='" + prn_no + "'");
+                SqlCommand c = new SqlCommand("SELECT count(*) FROM user_info WHERE PRN='" + prn_no + "'", conn);
+                int count = (int)c.ExecuteScalar(); 
+                if (count!=0)
                 {
-                    area_hidden.Visible = true;                     //Panel is Visible           
-                    submit.Enabled = true;
-
+                    Response.Write("<script>alert('PRN number already existing ! Please Go To Login Page')</script>");
                 }
-
-                /*PRN Number is Wrong*/
                 else
                 {
-                    Response.Write("<script>alert('Check Your PRN again !');</script>");
+                area_hidden.Visible = true;                     //Panel is Visible           
+                submit.Enabled = true;
+                verify.Enabled = false;
                 }
             }
+            /*PRN Number is Wrong*/
+            else
+            {
+                Response.Write("<script>alert('Check Your PRN again !');</script>");
+            }
+           
             conn.Close();
         }
         catch (Exception ee)
