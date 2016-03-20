@@ -1,0 +1,5 @@
+D:\ASP.NET Pro 2016\ASP.NET-PROJECT-2016\ASP_Website_2016\ASP_Project\WSOS\libs\GetConnection\bin\Debug\GetConnection.dll
+D:\ASP.NET Pro 2016\ASP.NET-PROJECT-2016\ASP_Website_2016\ASP_Project\WSOS\libs\GetConnection\bin\Debug\GetConnection.pdb
+D:\ASP.NET Pro 2016\ASP.NET-PROJECT-2016\ASP_Website_2016\ASP_Project\WSOS\libs\GetConnection\obj\Debug\GetConnection.csprojResolveAssemblyReference.cache
+D:\ASP.NET Pro 2016\ASP.NET-PROJECT-2016\ASP_Website_2016\ASP_Project\WSOS\libs\GetConnection\obj\Debug\GetConnection.dll
+D:\ASP.NET Pro 2016\ASP.NET-PROJECT-2016\ASP_Website_2016\ASP_Project\WSOS\libs\GetConnection\obj\Debug\GetConnection.pdb
