@@ -58,7 +58,7 @@
 					</div>
                     <div>
                     <label ><input type="checkbox" name="remember" id="checkbox">&nbsp;Remember Me</label><br /><br />
-					<button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
+					<asp:Button runat="server" ID="login" type="submit" class="btn btn-primary btn-lg btn-block" Text="Login" OnClick="login_Click"></asp:Button>
                     </div>
 				<%--</%--form>--%>
                 <div class="text-center"><br>
