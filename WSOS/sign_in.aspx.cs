@@ -39,7 +39,12 @@ public partial class sign_in : System.Web.UI.Page
             }
             else 
             { 
-                Response.Write("<script>alert('Successfull !! Role is "+ds.Tables[0].Rows[0]["Roles"]+"');</script>"); 
+                Response.Write("<script>alert('Successfull !! Role is "+ds.Tables[0].Rows[0]["Roles"]+"');</script>");
+                //Response.Write(Convert.ToString(ds.Tables[0].Rows[0]["Roles"]).Contains('S'));
+                if (Convert.ToString(ds.Tables[0].Rows[0]["Roles"]).Contains('S'))
+                {
+                    Response.Redirect("student_home.aspx");
+                }
             }
         }
         catch (Exception ee) { Response.Write(ee.StackTrace); }
