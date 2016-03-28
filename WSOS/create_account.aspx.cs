@@ -61,6 +61,7 @@ public partial class create_account : System.Web.UI.Page
     }
     protected void Submit_Click(object sender, EventArgs e)
     {
+        string prn_no = txt_prn.Text.ToString();            //Take PRN Number From Students
         try
         {
             conn.Open();
@@ -89,13 +90,15 @@ public partial class create_account : System.Web.UI.Page
             }
             else
             {
-                SqlCommand cmd = new SqlCommand("INSERT INTO user_info(First_Name,Last_Name,User_Name,DOB,Year,Division,Roll_No,Email_ID,Mobile,Address) values('" + firstname + "','" + lastname + "','" + username + "','" + date + month + year + "','" + classyear + "','" + division + "','" + rollno + "','" + email + "'," + mobile + ",'" + address + "')", conn);
+                rd.Close();
+                //Response.Write("INSERT INTO user_info(First_Name,Last_Name,User_Name,DOB,Year,Division,Roll_No,Email_ID,Mobile,Address,PRN) values('" + firstname + "','" + lastname + "','" + username + "','" + date + month + year + "','" + classyear + "','" + division + "','" + rollno + "','" + email + "'," + mobile + ",'" + address + "','" + prn_no + "')");
+                SqlCommand cmd = new SqlCommand("INSERT INTO user_info(First_Name,Last_Name,User_Name,DOB,Year,Division,Roll_No,Email_ID,Mobile,Address,PRN) values('" + firstname + "','" + lastname + "','" + username + "','" + date + month + year + "','" + classyear + "','" + division + "','" + rollno + "','" + email + "'," + mobile + ",'" + address + "','" + prn_no + "')", conn);
                 //SqlDataAdapter cmd = new SqlDataAdapter("INSERT INTO user_table values('" + firstname + "','" + lastname + "','" + username + "','" + date + month + year + "','" + classyear + "','" + division + "','" + rollno + "','" + email + "'," + mobile + ",'" + address + "')",conn)
 
                 /*Data Inserted*/
                 if (cmd.ExecuteNonQuery() != 0)
                 {
-                    SqlCommand cmd1 = new SqlCommand("INSERT INTO login_users1(userID,Username,Password,Email_ID) values((SELECT userID from user_info WHERE USER_NAME='" + username + "' ),'" + username + "',CONVERT(VARCHAR(32), HashBytes('MD5', '" + password + "'), 2),'" + email + "')", conn);
+                    SqlCommand cmd1 = new SqlCommand("INSERT INTO login_users1(userID,Username,Password,Email_ID,Roles) values((SELECT userID from user_info WHERE USER_NAME='" + username + "' ),'" + username + "',CONVERT(VARCHAR(32), HashBytes('MD5', '" + password + "'), 2),'" + email + "','S')", conn);
                     if (cmd1.ExecuteNonQuery() != 0)
                         Response.Write("<script>alert('Yeah !! Data Inserted !!')</script>");
                     else
@@ -107,6 +110,6 @@ public partial class create_account : System.Web.UI.Page
                 }
             }
         }
-        catch (Exception ee) { Response.Write(ee.StackTrace); }
+        catch (SQLException ee) { Response.Write(ee.StackTrace); }
     }
 }

@@ -12,8 +12,8 @@ public partial class sign_in : System.Web.UI.Page
     Class1 newConnection = new Class1();
     protected void Page_Load(object sender, EventArgs e)
     {
-        
-
+       
+       
     }
     protected void login_Click(object sender, EventArgs e)
     {
@@ -43,6 +43,7 @@ public partial class sign_in : System.Web.UI.Page
                 //Response.Write(Convert.ToString(ds.Tables[0].Rows[0]["Roles"]).Contains('S'));
                 if (Convert.ToString(ds.Tables[0].Rows[0]["Roles"]).Contains('S'))
                 {
+                    Session.Add("user", username);
                     Response.Redirect("student_home.aspx");
                 }
             }

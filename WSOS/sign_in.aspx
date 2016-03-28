@@ -24,7 +24,7 @@
 </style>
      <link rel="stylesheet" type="text/css" href="styles/inside_glyphicon.css" />
 </head>
-<body>
+<body style="background-color:rgb(236, 239, 241);">
         <!--#include file = "header_before_login.html"-->
     <form id="form1" runat="server">
         <div class="container">
